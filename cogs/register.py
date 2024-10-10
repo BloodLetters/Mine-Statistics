@@ -1,6 +1,4 @@
 import discord
-import asyncio
-
 from discord import app_commands
 from datetime import datetime, timezone
 
@@ -33,10 +31,8 @@ class Register(app_commands.Command):
             return
         
         try:
-            # Check if the guild already has a registered server
             existing_server = self.bot.db.get_server_by_guild(str(interaction.guild.id))
             
-            # Check if existing_server has data
             if existing_server.data and len(existing_server.data) > 0:
                 await interaction.followup.send(
                     "Your guild already has a registered Minecraft server. Please unregister it first before adding a new one.",
@@ -78,14 +74,10 @@ class Register(app_commands.Command):
             }
             
             self.bot.db.add_server(server_data)
-            
             await interaction.followup.send(
-                f"Server successfully registered and being monitored in {channel.mention}! The status will be updated every 5 minutes.",
+                f"Server successfully registered and being monitored in {channel.mention}! The status will be updated periodically.",
                 ephemeral=False
             )
-            
-            # Start the update task for this server
-            self.bot.loop.create_task(self.update_server_status(server_data))
             
         except Exception as e:
             print(f"Error in register command: {e}")
@@ -93,26 +85,3 @@ class Register(app_commands.Command):
                 "An error occurred during registration.",
                 ephemeral=True
             )
-
-    async def update_server_status(self, server_data):
-        while True:
-            await asyncio.sleep(server_data['update_interval'])
-            
-            try:
-                status = await self.bot.minecraft.get_server_status(server_data['server_ip'], server_data['server_type'])
-                
-                channel = self.bot.get_channel(int(server_data['channel_id']))
-                if channel:
-                    message = await channel.fetch_message(int(server_data['message_id']))
-                    if message:
-                        embed = self.bot.minecraft.create_embed(
-                            {"server_ip": server_data['server_ip'], "server_type": server_data['server_type']},
-                            status
-                        )
-                        await message.edit(embed=embed)
-                
-                # Update last_updated time in the database
-                self.bot.db.update_server(server_data['server_ip'], {'last_updated': datetime.now(timezone.utc).isoformat()})
-                
-            except Exception as e:
-                print(f"Error updating server status: {e}")
