@@ -14,7 +14,7 @@ from utils.database import Database
 from utils.minecraft import MinecraftServer
 
 # Konfigurasi
-DISCORD_TOKEN = ""
+DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
 class MinecraftMonitorBot(discord.Client):
     def __init__(self):

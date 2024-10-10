@@ -1,9 +1,11 @@
+import os
+
 from supabase import create_client
 
 class Database:
     def __init__(self):
-        self.supabase_url = ""
-        self.supabase_key = ""
+        self.supabase_url = os.environ['SUPABASE_URL']
+        self.supabase_key = os.environ['SUPABASE_KEY']
         self.client = create_client(self.supabase_url, self.supabase_key)
 
     def get_all_servers(self):
