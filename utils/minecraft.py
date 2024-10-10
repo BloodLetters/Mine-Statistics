@@ -36,7 +36,7 @@ class MinecraftServer:
                     "online": False,
                     "error": str(e)
                 }
-
+    # Test
     def create_embed(self, server_data: dict, status_data: dict):
         if status_data["online"]:
             if status_data['version'] == "":
