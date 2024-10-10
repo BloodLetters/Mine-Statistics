@@ -1,7 +1,8 @@
 import discord
-from discord import app_commands
 import psutil
 import platform
+
+from discord import app_commands
 
 class Stats(app_commands.Command):
     def __init__(self, bot):
@@ -27,5 +28,6 @@ class Stats(app_commands.Command):
         embed.add_field(name="Versions", value=f"Python: {python_version}\ndiscord.py: {discord_py_version}", inline=False)
         embed.add_field(name="Bot", value=f"Guilds Joined: {total_guilds}\nTotal Users: {total_users}", inline=False)
         embed.add_field(name="Minecraft Servers", value=f"Monitored: {monitored_servers}", inline=False)
-        embed.set_image(url=self.bot.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else self.bot.user.default_avatar.url)
+        
         await interaction.response.send_message(embed=embed)

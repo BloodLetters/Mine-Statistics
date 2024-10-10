@@ -3,18 +3,17 @@ import os
 import importlib
 
 from discord.ext import tasks
-from datetime import datetime
 
 from cogs.register import Register
 from cogs.unregister import Unregister
 from cogs.reload import Reload
 from cogs.help import Help
 from cogs.stats import Stats
+from cogs.support import Support
 
 from utils.database import Database
 from utils.minecraft import MinecraftServer
 
-# Konfigurasi
 DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
 class MinecraftMonitorBot(discord.Client):
@@ -26,7 +25,7 @@ class MinecraftMonitorBot(discord.Client):
         self.tree.remove_command('help')
         self.db = Database()
         self.minecraft = MinecraftServer()
-        self.cogs = [Register, Unregister, Reload, Stats, Help]
+        self.cogs = [Register, Unregister, Reload, Stats, Support, Help]
 
     async def setup_hook(self):
         await self.load_cogs()

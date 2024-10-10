@@ -1,8 +1,8 @@
-from mcstatus import JavaServer, BedrockServer
 import discord
-
-from datetime import datetime, timezone
 import re
+
+from mcstatus import JavaServer, BedrockServer
+from datetime import datetime, timezone
 
 class MinecraftServer:
     async def get_server_status(self, server_ip: str, server_type: str):
@@ -36,7 +36,7 @@ class MinecraftServer:
                     "online": False,
                     "error": str(e)
                 }
-    # Test
+
     def create_embed(self, server_data: dict, status_data: dict):
         if status_data["online"]:
             if status_data['version'] == "":

@@ -1,4 +1,5 @@
 import discord
+
 from discord import app_commands
 
 class Help(app_commands.Command):
@@ -16,6 +17,8 @@ class Help(app_commands.Command):
         embed.add_field(name="/unregister", value="Unregister a Minecraft server from monitoring", inline=False)
         embed.add_field(name="/reload", value="Reload the server status manually", inline=False)
         embed.add_field(name="/stats", value="Show bot statistics", inline=False)
-        embed.set_footer(text="Use /help [command] for more details on a specific command")
+        embed.add_field(name="/support", value="Showing discord support server", inline=False)
+        embed.set_footer(text="Use /help for more details on a specific command")
+        embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else self.bot.user.default_avatar.url)
         
         await interaction.response.send_message(embed=embed)

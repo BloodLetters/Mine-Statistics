@@ -10,11 +10,9 @@ class Unregister(app_commands.Command):
         )
         self.bot = bot
 
-    # Tambahkan argumen ke metode callback
     async def callback(self, interaction: discord.Interaction, server_id: str):
         await interaction.response.defer(ephemeral=True)
-        
-        # Cek apakah user memiliki izin yang diperlukan
+
         if not (interaction.user.id == interaction.guild.owner_id or 
                 interaction.user.guild_permissions.administrator):
             await interaction.followup.send(
@@ -24,7 +22,6 @@ class Unregister(app_commands.Command):
             return
         
         try:
-            # Ambil server berdasarkan server_id yang diterima sebagai argumen
             server = self.bot.db.delete_server(server_id, str(interaction.guild.id))
             
             if not server.data:
