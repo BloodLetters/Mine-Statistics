@@ -14,7 +14,10 @@ from cogs.support import Support
 from utils.database import Database
 from utils.minecraft import MinecraftServer
 
-DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
+if os.getenv('DISCORD_TOKEN_BETA') != None:
+    DISCORD_TOKEN = os.environ['DISCORD_TOKEN_BETA']
+else:
+    DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
 class MinecraftMonitorBot(discord.Client):
     def __init__(self):
