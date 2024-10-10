@@ -1,5 +1,5 @@
 discord.py==2.4.0
-psutils==6.0.0
+psutil==6.0.0
 requests==2.32.3
 supabase==2.9.0
 mcstatus==11.1.1

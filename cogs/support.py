@@ -15,5 +15,6 @@ class Support(app_commands.Command):
         embed = discord.Embed(title="Bot Statistics", color=discord.Color.green())
         embed.add_field(name="Information", value=f"If you getting any error pls contact us", inline=False)
         embed.add_field(name="Support", value=f"(Click here)[https://discord.gg/hZTy9TafAM]", inline=False)
-        embed.set_image(url=self.bot.avatar_url)
+        embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else self.bot.user.default_avatar.url)
+        
         await interaction.response.send_message(embed=embed)
