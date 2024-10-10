@@ -35,8 +35,9 @@ class Register(app_commands.Command):
         try:
             # Check if the guild already has a registered server
             existing_server = self.bot.db.get_server_by_guild(str(interaction.guild.id))
-
-            if existing_server.data or len(existing_server) > 0:
+            
+            # Check if existing_server has data
+            if existing_server.data and len(existing_server.data) > 0:
                 await interaction.followup.send(
                     "Your guild already has a registered Minecraft server. Please unregister it first before adding a new one.",
                     ephemeral=True
@@ -73,7 +74,7 @@ class Register(app_commands.Command):
                 'message_id': str(status_message.id),
                 'guild_id': str(interaction.guild.id),
                 'last_updated': datetime.now(timezone.utc).isoformat(),
-                'update_interval': 300  # 60 seconds 1 minutes
+                'update_interval': 300  # 5 minutes in seconds
             }
             
             self.bot.db.add_server(server_data)
