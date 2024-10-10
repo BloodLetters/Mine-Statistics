@@ -30,11 +30,12 @@ class MinecraftServer:
                     "version": status.version.version
                 }
         except Exception as e:
-            print(f"Error checking server status: {e}")
-            return {
-                "online": False,
-                "error": str(e)
-            }
+            if e != None or e != "":
+                print(f"Error checking server status: {e}")
+                return {
+                    "online": False,
+                    "error": str(e)
+                }
 
     def create_embed(self, server_data: dict, status_data: dict):
         if status_data["online"]:

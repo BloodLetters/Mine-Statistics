@@ -1,5 +1,6 @@
 import discord
 import os
+import importlib
 
 from discord.ext import tasks
 from datetime import datetime
@@ -25,20 +26,29 @@ class MinecraftMonitorBot(discord.Client):
         self.tree.remove_command('help')
         self.db = Database()
         self.minecraft = MinecraftServer()
+        self.cogs = [Register, Unregister, Reload, Stats, Help]
 
     async def setup_hook(self):
-        # Load all cogs
-        self.tree.add_command(Register(self))
-        self.tree.add_command(Unregister(self))
-        self.tree.add_command(Reload(self))
-        self.tree.add_command(Stats(self))
-        self.tree.add_command(Help(self))
+        await self.load_cogs()
+        await self.tree.sync()
+
+    async def load_cogs(self):
+        for cog in self.cogs:
+            self.tree.add_command(cog(self))
+
+    async def reload_cogs(self):
+        self.tree.clear_commands(guild=None)
+        for cog in self.cogs:
+            module = importlib.import_module(cog.__module__)
+            importlib.reload(module)
+
+        await self.load_cogs()
         await self.tree.sync()
 
     async def start_tasks(self):
         self.update_status.start()
 
-    @tasks.loop(minutes=5)
+    @tasks.loop(minutes=1)
     async def update_status(self):
         await self.minecraft.update_all_servers(self)
 

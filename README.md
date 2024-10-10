@@ -1,2 +1,2 @@
 # Mine-Statistics
-Minecraft Statistics discord bot
+Minecraft Statistics Bot For Discord
