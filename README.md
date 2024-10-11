@@ -2,10 +2,10 @@
 Minecraft Statistics Bot For Discord
 
 # Feature
-✅ Automatic update embed
-✅ Fully working async
-✅ Modular command(cogs)
-✅ Database supabase based
+✅ Automatic update embed <br>
+✅ Fully working async <br>
+✅ Modular command(cogs) <br> 
+✅ Database supabase based <br>
 
 # Installation
 1. Install package from ``requirements.txt``
