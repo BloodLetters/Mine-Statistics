@@ -8,7 +8,8 @@ Minecraft Statistics Bot For Discord
 ✅ Modular command(cogs) <br> 
 ✅ Database supabase based <br>
 ✅ Budget based project <br>
-✅ Very lightweight
+✅ Very lightweight <br>
+✅ Bedrock and Java Support
 
 ## About project
 I made this bot for fun. <br>
