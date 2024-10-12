@@ -4,14 +4,14 @@ Minecraft Statistics Bot For Discord
 
 ## Feature
 ✅ Automatic update embed <br>
-✅ Fully working async <br>
+✅ Fully async system <br>
 ✅ Modular command(cogs) <br> 
 ✅ Database supabase based <br>
-✅ Budget based project <br>
 ✅ Very lightweight <br>
-✅ Bedrock and Java Support
+✅ Bedrock and Java Support <br>
+✅ Anti SQL Injection
 
 ## About project
 I made this bot for fun. <br>
 If you want to use this bot for personal use, go ahead <br>
-**BUT DON'T USE IT FOR ANY COMMERCIAL PURPOSE**
+**BUT DON'T USE IT FOR ANY COMMERCIAL PURPOSE*
