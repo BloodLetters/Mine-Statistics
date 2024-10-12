@@ -24,9 +24,9 @@ class Reload(app_commands.Command):
 
         try:
             await self.bot.reload_cogs()
-            await self.bot.minecraft.update_all_servers(self.bot)
+            # await self.bot.minecraft.update_all_servers(self.bot)
             await interaction.followup.send(
-                "All cogs have been reloaded and server statuses have been updated!",
+                "All cogs have been reloaded!",
                 ephemeral=True
             )
         except Exception as e:

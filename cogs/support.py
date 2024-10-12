@@ -1,5 +1,6 @@
 import discord
 
+from datetime import datetime, timezone
 from discord import app_commands
 
 class Support(app_commands.Command):
@@ -16,5 +17,5 @@ class Support(app_commands.Command):
         embed.add_field(name="Information", value=f"If you getting any error pls contact us", inline=False)
         embed.add_field(name="Support", value=f"[Click here](https://discord.gg/hZTy9TafAM)", inline=False)
         embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else self.bot.user.default_avatar.url)
-        
+        embed.timestamp = datetime.now(timezone.utc)
         await interaction.response.send_message(embed=embed)

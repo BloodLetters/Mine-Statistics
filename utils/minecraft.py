@@ -13,18 +13,19 @@ class MinecraftServer:
         self.cache_ttl = cache_ttl
         self.queue = deque()
 
-    async def get_server_status(self, server_ip: str, server_type: str):
+    async def get_server_status(self, server_ip: str, server_type: str, server_port: int = None):
         async with self.semaphore:
             # Check cache first
-            cache_key = f"{server_ip}:{server_type}"
+            cache_key = f"{server_ip}:{server_port}:{server_type}"
             if cache_key in self.cache:
                 cached_data, timestamp = self.cache[cache_key]
                 if (datetime.now(timezone.utc) - timestamp).total_seconds() < self.cache_ttl:
                     return cached_data
 
             try:
+                address = f"{server_ip}:{server_port}" if server_port else server_ip
                 if server_type.lower() == "java":
-                    server = JavaServer.lookup(server_ip)
+                    server = JavaServer.lookup(address)
                     status = await server.async_status()
                     result = {
                         "online": True,
@@ -35,7 +36,7 @@ class MinecraftServer:
                         "version": status.version.name
                     }
                 elif server_type.lower() == "bedrock":
-                    server = BedrockServer.lookup(server_ip)
+                    server = BedrockServer.lookup(address)
                     status = await server.async_status()
                     result = {
                         "online": True,
@@ -68,11 +69,15 @@ class MinecraftServer:
                 timestamp=datetime.now(timezone.utc)
             )
             
+            server_info = f"**IP:** {server_data['server_ip']}\n"
+            if server_data.get('server_port'):
+                server_info += f"**Port:** {server_data['server_port']}\n"
+            server_info += f"**Type:** {server_data['server_type'].upper()}\n"
+            server_info += f"**Version:** {status_data['version']}"
+            
             embed.add_field(
                 name="Server Information",
-                value=f"**IP:** {server_data['server_ip']}\n"
-                      f"**Type:** {server_data['server_type'].upper()}\n"
-                      f"**Version:** {status_data['version']}",
+                value=server_info,
                 inline=False
             )
             
@@ -126,13 +131,13 @@ class MinecraftServer:
             channel = bot.get_channel(int(server_data['channel_id']))
             if not channel:
                 print(f"Channel not found for server {server_data['server_ip']}. Deleting")
-                bot.db.delete_server(server_data['server_ip'], server_data['guild_id'])
+                bot.db.delete_server(server_data['server_ip'], server_data['guild_id'], server_data.get('server_port'))
                 return
 
             detect = bot.db.get_Embed(int(server_data['guild_id']), int(server_data['channel_id']), int(server_data['message_id']))
             if not detect:
                 print(f"Embed not found for server {server_data['server_ip']}. Deleting")
-                bot.db.delete_server(server_data['server_ip'], server_data['guild_id'])
+                bot.db.delete_server(server_data['server_ip'], server_data['guild_id'], server_data.get('server_port'))
                 return
 
             try:
@@ -141,25 +146,28 @@ class MinecraftServer:
                 print(f"Message not found for server {server_data['server_ip']}. Creating new message.")
                 status = await self.get_server_status(
                     server_data['server_ip'],
-                    server_data['server_type']
+                    server_data['server_type'],
+                    server_data.get('server_port')
                 )
                 embed = self.create_embed(server_data, status)
                 new_message = await channel.send(embed=embed)
                 
                 bot.db.update_server(server_data['server_ip'], {
                     'message_id': str(new_message.id)
-                })
+                }, server_data.get('server_port'))
                 return
 
             status = await self.get_server_status(
                 server_data['server_ip'],
-                server_data['server_type']
+                server_data['server_type'],
+                server_data.get('server_port')
             )
             embed = self.create_embed(server_data, status)
             await message.edit(embed=embed)
             
         except Exception as e:
             print(f"Error updating status for server {server_data['server_ip']}: {e}")
+
 
     async def update_all_servers(self, bot):
         try:

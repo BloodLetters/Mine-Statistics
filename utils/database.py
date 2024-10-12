@@ -19,11 +19,11 @@ class Database:
     def get_all_servers(self):
         return self.client.table('servers').select('*').execute()
 
-    # def get_channel(self, channel_id):
-    #     return self.client.table('servers').select('*').eq('channel_id', channel_id).execute()
-
-    def get_server(self, server_ip, guild_id):
-        return self.client.table('servers').select('*').eq('server_ip', server_ip).eq("guild_id", guild_id).execute()
+    def get_server(self, server_ip, guild_id, server_port=None):
+        query = self.client.table('servers').select('*').eq('server_ip', server_ip).eq("guild_id", guild_id)
+        if server_port:
+            query = query.eq('server_port', server_port)
+        return query.execute()
 
     def get_Embed(self, guild_id, channel_id, message_id):
         return self.client.table('servers').select('*').eq('message_id', message_id).eq('channel_id', channel_id).eq("guild_id", guild_id).execute()
@@ -34,12 +34,18 @@ class Database:
     def fetch_message(self, message_id):
         return self.client.table('servers').select('*').eq('message_id', message_id).execute()
 
-    def update_server(self, server_ip, data):
-        return self.client.table('servers').update(data).eq('server_ip', server_ip).execute()
+    def update_server(self, server_ip, data, server_port=None):
+        query = self.client.table('servers').update(data).eq('server_ip', server_ip)
+        if server_port:
+            query = query.eq('server_port', server_port)
+        return query.execute()
 
-    def delete_server(self, server_ip, guild_id):
-        return self.client.table('servers').delete().eq('server_ip', server_ip).eq('guild_id', guild_id).execute()
-
+    def delete_server(self, server_ip, guild_id, server_port=None):
+        query = self.client.table('servers').delete().eq('server_ip', server_ip).eq('guild_id', guild_id)
+        if server_port:
+            query = query.eq('server_port', server_port)
+        return query.execute()
+    
     def add_staff(self, user_id):
         return self.client.table('staff').insert({'user_id': user_id}).execute()
 

@@ -1,4 +1,6 @@
 import discord
+import re
+
 from discord import app_commands
 
 class Unregister(app_commands.Command):
@@ -10,6 +12,9 @@ class Unregister(app_commands.Command):
         )
         self.bot = bot
 
+    @app_commands.describe(
+        server_id="Server Address",
+    )
     async def callback(self, interaction: discord.Interaction, server_id: str):
         await interaction.response.defer(ephemeral=True)
 
@@ -54,3 +59,21 @@ class Unregister(app_commands.Command):
                 "An error occurred while unregistering the server.",
                 ephemeral=True
             )
+
+    def is_valid_address(self, address):
+        domain_pattern = r'^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
+        ip_pattern = r'^(\d{1,3}\.){3}\d{1,3}$'
+        sql_injection_pattern = r'(\b(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE|DROP|UNION|TABLE|OR|AND)\b)|(-{2}|;|\/\*|\*\/|@|@@|char|nchar|varchar|nvarchar|alter|begin|cast|create|cursor|declare|exec|execute|fetch|kill|open|sys|xp_)'
+
+        if re.match(domain_pattern, address):
+            return {'valid': True, 'type': 'domain'}
+        
+        elif re.match(ip_pattern, address):
+            octets = address.split('.')
+            if all(0 <= int(octet) <= 255 for octet in octets):
+                return {'valid': True, 'type': 'ip'}
+        
+        if re.search(sql_injection_pattern, address, re.IGNORECASE):
+            return {'valid': False, 'type': 'invalid'}
+
+        return {'valid': False, 'type': 'invalid'}
