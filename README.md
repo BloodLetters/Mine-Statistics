@@ -14,4 +14,4 @@ Minecraft Statistics Bot For Discord
 ## About project
 I made this bot for fun. <br>
 If you want to use this bot for personal use, go ahead <br>
-**BUT DON'T USE IT FOR ANY COMMERCIAL PURPOSE*
+**BUT DON'T USE IT FOR ANY COMMERCIAL PURPOSE**
