@@ -2,6 +2,7 @@ import discord
 import psutil
 import platform
 import time
+import os
 
 from datetime import datetime, timezone
 from discord import app_commands
@@ -24,7 +25,6 @@ class Stats(app_commands.Command):
         total_staff = len(self.bot.db.staff_list())
 
         cpu_usage = psutil.cpu_percent()
-        ram_usage = psutil.virtual_memory().used / (1024 * 1024)
         monitored_servers = len(self.bot.db.get_all_servers().data)
 
         embed = discord.Embed(title="Bot Information", color=discord.Color.green())
@@ -37,7 +37,7 @@ class Stats(app_commands.Command):
         embed.add_field(name="``📜 Total Server``", value=f"```{total_guilds} Server```", inline=True)
         embed.add_field(name="``🛡️ Total Staff``", value=f"```{total_staff} Staff```", inline=True)
 
-        embed.add_field(name="``📟 RAM Usage``", value=f"```{ram_usage:.2f} MB```", inline=True)
+        embed.add_field(name="``📟 RAM Usage``", value=f"```{get_memory_usage()}```", inline=True)
         embed.add_field(name="``⚡ CPU Usage``", value=f"```{cpu_usage}%```", inline=True)
         embed.add_field(name="``📂 Server Registered``", value=f"```{monitored_servers} Server```", inline=True)
         # embed.add_field(name="⚙️ System", value=f"CPU Usage: {cpu_usage}%\nRAM Usage: {ram_usage}%", inline=False)
@@ -48,6 +48,16 @@ class Stats(app_commands.Command):
         embed.timestamp = datetime.now(timezone.utc)
         await interaction.response.send_message(embed=embed)
 
+def get_memory_usage():
+    try:
+        current_process = psutil.Process(os.getpid())
+        memory_info = current_process.memory_info()
+        memory_usage_mb = memory_info.rss / 1024 / 1024
+        return f"{memory_usage_mb:.2f} MB"
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return f"Error!"
+        
 def get_uptime(time_old):
     uptime_seconds = time.time() - time_old
     
