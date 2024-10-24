@@ -11,6 +11,13 @@ Minecraft Statistics Bot For Discord
 ✅ Bedrock and Java Support <br>
 ✅ Anti SQL Injection
 
+## Preview
+![image](https://github.com/user-attachments/assets/85e75f28-4a44-4611-b120-b57d8ae94651)
+![image](https://github.com/user-attachments/assets/60d2e68b-eb79-48c1-98c7-aca4c4009958)
+![image](https://github.com/user-attachments/assets/2f1c8d24-1451-495d-bfd9-7960993c1aed)
+
+
+
 ## About project
 I made this bot for fun. <br>
 If you want to use this bot for personal use, go ahead <br>
