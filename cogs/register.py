@@ -24,7 +24,12 @@ class Register(app_commands.Command):
     ])
     async def callback(self, interaction: discord.Interaction, address: str, server_type: app_commands.Choice[str], server_port: int = None):
         await interaction.response.defer(ephemeral=False)
-        
+        bot_member = interaction.guild.me
+
+        if bot_member.guild_permissions.manage_channels == False:
+            await interaction.send("I Dont have manage channel permission. give it to me first")
+            return
+            
         if not (interaction.user.id == interaction.guild.owner_id or 
                 interaction.user.guild_permissions.administrator):
             await interaction.followup.send(
